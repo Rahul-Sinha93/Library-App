@@ -6,18 +6,25 @@ class Book {
     }
 }
 
+show();
+
 class Display {
 
     add(book) {
+        let booksObj= [];
+        let books = localStorage.getItem('books');
+        if (books == null){
+            booksObj = [];
+        }
+        else{
+            booksObj = JSON.parse(books)
+        }
 
-        let table = document.getElementById('tableBody')
-        table.innerHTML += ` <tr>
-                                <td>${book.name}</td>
-                                <td>${book.author}</td>
-                                <td>${book.type}</td>
-                                </tr>`
+        booksObj.push(book);
+        localStorage.setItem('books', JSON.stringify(booksObj));
 
-
+       
+        show();
     }
 
     clear() {
@@ -65,7 +72,6 @@ let libraryForm = document.getElementById('libraryForm')
 libraryForm.addEventListener('submit', submitform);
 
 function submitform(e) {
-    console.log('submitting');
 
     let name = document.getElementById('bookName').value
     let author = document.getElementById('author').value
@@ -81,8 +87,7 @@ function submitform(e) {
         type = cooking.value
     }
     let book = new Book(name, author, type)
-    console.log(book);
-
+    
     let display = new Display()
 
     if (display.validate(book)) {
@@ -99,4 +104,30 @@ function submitform(e) {
 
     e.preventDefault();
 
+}
+
+function show()
+{
+    books = localStorage.getItem('books');
+    if (books == null){
+        booksObj = [];
+    }
+    else{
+        booksObj = JSON.parse(books)
+    }
+    let html = ""
+
+    booksObj.forEach(function(element){
+    
+        html += `<tr>
+                            <td>${element.name}</td>
+                            <td>${element.author}</td>
+                            <td>${element.type}</td>
+                            </tr>`
+
+    })
+
+    let table = document.getElementById('tableBody')
+    table.innerHTML = html;
+    
 }
